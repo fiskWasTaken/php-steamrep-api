@@ -16,15 +16,19 @@ class SteamRep {
     private $client;
 
     /**
-     * SteamRep client constructor. You may override base_uri if
-     * you need to access the SteamRep API via a forward proxy.
+     * SteamRep client constructor. You may override certain Guzzle client
+     * options if you need to access the SteamRep API via a forward proxy or
+     * increase request timeout.
      *
-     * @param string $base_uri
+     * @param array $options
      */
-    public function __construct($base_uri = 'https://steamrep.com') {
-        $this->client = new Client([
-            'base_uri' => $base_uri
-        ]);
+    public function __construct($options) {
+        $defaults = [
+            'base_uri' => 'https://steamrep.com',
+            'timeout' => 3000
+        ];
+
+        $this->client = new Client($defaults + $options);
     }
 
     /**
