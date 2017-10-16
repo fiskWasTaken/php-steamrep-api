@@ -10,11 +10,28 @@ class SteamRepResponseTest extends TestCase {
      */
     private $instance;
 
-    public function setUp() {
+    /**
+     * @var SteamRepResponse
+     */
+    private $instance2;
+
+    private function setUpNormalInstance() {
         $filename = './tests/mattie.json';
         $resource = fopen($filename, 'r');
         $data = json_decode(fread($resource, filesize($filename)), true);
         $this->instance = new SteamRepResponse($data);
+    }
+
+    private function setUpMalformedInstance() {
+        $filename = './tests/fisk.json';
+        $resource = fopen($filename, 'r');
+        $data = json_decode(fread($resource, filesize($filename)), true);
+        $this->instance2 = new SteamRepResponse($data);
+    }
+
+    public function setUp() {
+        $this->setUpNormalInstance();
+        $this->setUpMalformedInstance();
     }
 
     public function testTags() {
@@ -50,5 +67,10 @@ class SteamRepResponseTest extends TestCase {
 
     public function testFound() {
         $this->assertEquals(true, $this->instance->isFound());
+    }
+
+    public function testMalformedSingleTagAccess() {
+        $tags = $this->instance2->getReputation()->getTags();
+        $this->assertEquals('BAZAAR', $tags[0]->getAuthority());
     }
 }
