@@ -45,4 +45,8 @@ class Reputation extends SteamRepModel {
     public function getSummary(): string {
         return $this->body['summary'] ?? "none";
     }
+
+    public function getTagString(): string {
+        return $this->body['full'] ?? '';
+    }
 }

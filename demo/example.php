@@ -5,7 +5,7 @@ include_once __DIR__ . '/../vendor/autoload.php';
 use SteamRep\SteamRep;
 
 $client = new SteamRep();
-$response = $client->getReputation("76561197971691194");
+$response = $client->getUser("76561197971691194");
 
 $tags = $response->getReputation()->getTags();
 

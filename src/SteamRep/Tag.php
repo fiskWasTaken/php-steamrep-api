@@ -32,10 +32,10 @@ class Tag extends SteamRepModel {
 
     /**
      * Possible category values and their applied usages are as follows:
-     * "trusted" -- indicates a trusted user group; partner community, middleman, SteamRep admin, etc.
-     * "misc"    -- used for the SteamRep donator label.
-     * "evil"    -- scammer tags.
-     * "warning" -- caution tags.
+     * "trusted" - indicates a trusted user group; partner community, middleman, SteamRep admin, etc.
+     * "misc"    - used for the SteamRep donator label.
+     * "evil"    - scammer tags.
+     * "warning" - caution tags.
      *
      * @return string
      */

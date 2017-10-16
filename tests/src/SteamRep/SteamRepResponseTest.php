@@ -57,6 +57,7 @@ class SteamRepResponseTest extends TestCase {
     public function testSummary() {
         $reputation = $this->instance->getReputation();
         $this->assertEquals('ADMIN', $reputation->getSummary());
+        $this->assertEquals("REDDIT ADMIN,SR ADMIN,SR DONATOR", $reputation->getTagString());
     }
 
     public function testIds() {

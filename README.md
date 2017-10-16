@@ -1,4 +1,4 @@
-# SteamRep PHP bindings
+# SteamRep PHP API
 
 Provides bindings for the public SteamRep web APIs to fetch reputation for a user.
 
@@ -17,7 +17,7 @@ Typical usage is as follows:
 use SteamRep\SteamRep;
 
 $client = new SteamRep();
-$response = $client->getReputation("76561197971691194");
+$response = $client->getUser("76561197971691194");
 
 $tags = $response->getReputation()->getTags();
 
@@ -27,23 +27,86 @@ foreach ($tags as $tag) {
 ?>
 ```
 
-### Tags
+### SteamRepResponse
 
-SteamRep tags are formatted as follows:
+`SteamRepResponse` is the response object for a successful call.
 
-```
-SR SCAMMER
-TF2OP ADMIN
-SOP CAUTION
-```
+#### isValid(): bool
 
-This library supplies some helper methods to extract the authority and status for each tag.
-See the PHPDoc for more information.
+Although a call may be successful, the input SteamId64 may be incorrect.
+This asserts that the value of `steamrep.flags.status` is `valid`.
+
+#### getReputation(): Reputation
+
+Returns a `Reputation` entity which provides helper functions for the `steamrep.reputation` document.
+
+### Reputation
+
+The `Reputation` class exposes the reputation data for a user.
+
+#### getSummary(): string
+
+Returns the value provided by `steamrep.reputation.summary`. Known values are as follows:
+
+* `none`
+* `SCAMMER`
+* `CAUTION`
+* `ADMIN`
+* `MIDDLEMAN`
+* `TRUSTED SELLER` (disused)
+
+#### getTagString(): string
+
+A delimited list of tag names provided by `steamrep.reputation.full`.
+
+Tags in the tag string are sorted by tag category, with miscellaneous tags appearing last.
+
+#### getTags(): Tag[]
+
+Returns an array of `Tag` objects representing the `steamrep.reputation.tags` document.
+
+Tags in this array are sorted in chronological order.
+
+### Tag
+
+A `Tag` represents a SteamRep tag, which consists of an authority and a status. This library supplies some helper methods to extract this information.
+
+#### getName(): string
+
+Get the name for this tag, e.g. `SOP ADMIN`
+
+#### getAuthority(): string
+
+Get the authority for this tag, e.g. `SOP`
+
+#### getStatus(): string
+
+Get the status for this tag, e.g. `ADMIN`
+
+#### getTimestamp(): int
+
+Get the creation time of the tag as a UNIX timestamp.
+
+#### getDateTime(): DateTime
+
+Get the creation time of the tag as a PHP `DateTime` object.
+
+**NB**: The SteamRep API provides a date string, however this does not include the timezone.
+If you need "SteamRep time", set the timezone of the returned object to CST6CDT.
+
+#### getCategory(): string
+
+Get the category of the tag. This can be one of the following:
+
+* `trusted` - indicates a trusted user group; partner community, middleman, SteamRep admin, etc.
+* `misc`    - used for the SteamRep donator label.
+* `evil`    - scammer tags.
+* `warning` - caution tags.
 
 ### Error handling
 
 * The client will throw a `GuzzleException` for Guzzle client errors, or a `SteamRepException` if 
 the returned data is malformed.
 
-* Check the `SteamRepResponse` `isFound()` method if you aren't totally sure about 
+* Always check the `SteamRepResponse` `isFound()` method if you aren't totally sure about 
 your inputs. This will be true if the requested SteamID64 is valid.

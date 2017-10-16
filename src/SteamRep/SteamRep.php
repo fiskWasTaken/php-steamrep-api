@@ -41,7 +41,7 @@ class SteamRep {
      * @throws GuzzleException
      * @throws SteamRepException
      */
-    public function getReputation(string $steamid64): SteamRepResponse {
+    public function getUser(string $steamid64): SteamRepResponse {
         $response = $this->client->get("/api/beta4/reputation/{$steamid64}/?tagdetails=1&json=1");
 
         if ($response->getStatusCode() !== 200) {
