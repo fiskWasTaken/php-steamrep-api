@@ -22,10 +22,10 @@ class SteamRep {
      *
      * @param array $options
      */
-    public function __construct($options) {
+    public function __construct(array $options = []) {
         $defaults = [
             'base_uri' => 'https://steamrep.com',
-            'timeout' => 3000
+            'timeout' => 3
         ];
 
         $this->client = new Client($defaults + $options);
