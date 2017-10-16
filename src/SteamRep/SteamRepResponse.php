@@ -17,18 +17,21 @@ class SteamRepResponse extends SteamRepModel {
      * @return bool
      */
     public function isFound(): bool {
-        return $this->body['steamrep']['flags']['status'] === 'exists';
+        return (
+            isset($this->body['steamrep']['flags']['status']) &&
+            $this->body['steamrep']['flags']['status'] === 'exists'
+        );
     }
 
     public function getSteamId32(): string {
-        return $this->body['steamrep']['steamID32'];
+        return $this->body['steamrep']['steamID32'] ?? "";
     }
 
     public function getSteamId64(): string {
-        return $this->body['steamrep']['steamID64'];
+        return $this->body['steamrep']['steamID64'] ?? "";
     }
 
     public function getSteamRepUrl(): string {
-        return $this->body['steamrep']['steamrepurl'];
+        return $this->body['steamrep']['steamrepurl'] ?? "";
     }
 }
