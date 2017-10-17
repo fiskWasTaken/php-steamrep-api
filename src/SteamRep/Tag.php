@@ -9,10 +9,6 @@ use DateTime;
  * @package SteamRep
  */
 class Tag extends SteamRepModel {
-    public function getName(): string {
-        return $this->body['name'];
-    }
-
     public function getTimestamp(): int {
         return (int)$this->body['timestamp'];
     }
@@ -52,6 +48,10 @@ class Tag extends SteamRepModel {
      */
     public function getAuthority(): string {
         return explode(' ', $this->getName())[0];
+    }
+
+    public function getName(): string {
+        return $this->body['name'];
     }
 
     /**

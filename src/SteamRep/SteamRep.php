@@ -42,7 +42,8 @@ class SteamRep {
      * @throws SteamRepException
      */
     public function getUser(string $steamid64): SteamRepResponse {
-        $response = $this->client->get("/api/beta4/reputation/{$steamid64}/?tagdetails=1&json=1");
+        $uri ="/api/beta4/reputation/{$steamid64}/?tagdetails=1&extended=1&json=1";
+        $response = $this->client->get($uri);
 
         if ($response->getStatusCode() !== 200) {
             $exc = new SteamRepException("Unexpected status code for response: {$response->getStatusCode()}");

@@ -24,7 +24,6 @@ $tags = $response->getReputation()->getTags();
 foreach ($tags as $tag) {
     print("{$tag->getAuthority()} {$tag->getStatus()}\n"); // SR ADMIN
 }
-?>
 ```
 
 ### SteamRepResponse
@@ -33,12 +32,22 @@ foreach ($tags as $tag) {
 
 #### isValid(): bool
 
-Although a call may be successful, the input SteamId64 may be incorrect.
+Although a call to the SteamRep API may be successful, the input SteamId64 may
+be incorrect, or refers to a profile not yet tracked on SteamRep.
+
 This asserts that the value of `steamrep.flags.status` is `valid`.
+
+#### getLastSyncTime(): int
+
+Get the time of the last update for the SteamRep profile.
 
 #### getReputation(): Reputation
 
 Returns a `Reputation` entity which provides helper functions for the `steamrep.reputation` document.
+
+#### getStats(): Stats
+
+Returns a `Stats` entity which provides helper functions for the `steamrep.stats` document.
 
 ### Reputation
 
@@ -103,7 +112,17 @@ Get the category of the tag. This can be one of the following:
 * `evil`    - scammer tags.
 * `warning` - caution tags.
 
-### Error handling
+### Stats
+
+#### getBannedFriendsCount(): int
+
+Return the number of friends with SCAMMER tags.
+
+#### getUnconfirmedReportsCount(): int
+
+Returns the count of unconfirmed reports (the number of forum threads with non-conclusive tags).
+
+## Error handling
 
 * The client will throw a `GuzzleException` for Guzzle client errors, or a `SteamRepException` if 
 the returned data is malformed.

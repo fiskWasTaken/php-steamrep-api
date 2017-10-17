@@ -8,34 +8,38 @@ class SteamRepResponseTest extends TestCase {
     /**
      * @var SteamRepResponse
      */
-    private $instance;
+    private $mattie;
 
     /**
      * @var SteamRepResponse
      */
-    private $instance2;
+    private $fisk;
 
-    private function setUpNormalInstance() {
-        $filename = './tests/mattie.json';
-        $resource = fopen($filename, 'r');
-        $data = json_decode(fread($resource, filesize($filename)), true);
-        $this->instance = new SteamRepResponse($data);
-    }
+    /**
+     * @var SteamRepResponse
+     */
+    private $frankie;
 
-    private function setUpMalformedInstance() {
-        $filename = './tests/fisk.json';
-        $resource = fopen($filename, 'r');
-        $data = json_decode(fread($resource, filesize($filename)), true);
-        $this->instance2 = new SteamRepResponse($data);
+    /**
+     * @var SteamRepResponse
+     */
+    private $notfound;
+
+    private function load($path): SteamRepResponse {
+        $resource = fopen($path, 'r');
+        $data = json_decode(fread($resource, filesize($path)), true);
+        return new SteamRepResponse($data);
     }
 
     public function setUp() {
-        $this->setUpNormalInstance();
-        $this->setUpMalformedInstance();
+        $this->mattie = $this->load('./tests/mattie.json');
+        $this->fisk = $this->load('./tests/fisk.json');
+        $this->frankie = $this->load('./tests/frankie.json');
+        $this->notfound = $this->load('./tests/notfound.json');
     }
 
     public function testTags() {
-        $reputation = $this->instance->getReputation();
+        $reputation = $this->mattie->getReputation();
         $tags = $reputation->getTags();
 
         $this->assertEquals('SR', $tags[0]->getAuthority());
@@ -55,23 +59,35 @@ class SteamRepResponseTest extends TestCase {
     }
 
     public function testSummary() {
-        $reputation = $this->instance->getReputation();
+        $reputation = $this->mattie->getReputation();
         $this->assertEquals('ADMIN', $reputation->getSummary());
         $this->assertEquals("REDDIT ADMIN,SR ADMIN,SR DONATOR", $reputation->getTagString());
     }
 
     public function testIds() {
-        $this->assertEquals('76561197971691194', $this->instance->getSteamId64());
-        $this->assertEquals('STEAM_0:0:5712733', $this->instance->getSteamId32());
-        $this->assertEquals('http://steamrep.com/profiles/76561197971691194', $this->instance->getSteamRepUrl());
+        $this->assertEquals('76561197971691194', $this->mattie->getSteamId64());
+        $this->assertEquals('STEAM_0:0:5712733', $this->mattie->getSteamId32());
+        $this->assertEquals('http://steamrep.com/profiles/76561197971691194', $this->mattie->getSteamRepUrl());
     }
 
     public function testFound() {
-        $this->assertEquals(true, $this->instance->isFound());
+        $this->assertEquals(true, $this->mattie->isFound());
+        $this->assertEquals(false, $this->notfound->isFound());
+    }
+
+    public function testLastSyncTime() {
+        $this->assertEquals(0, $this->notfound->getLastSyncTime());
+        $this->assertEquals(1508096994, $this->fisk->getLastSyncTime());
     }
 
     public function testMalformedSingleTagAccess() {
-        $tags = $this->instance2->getReputation()->getTags();
+        $tags = $this->fisk->getReputation()->getTags();
         $this->assertEquals('BAZAAR', $tags[0]->getAuthority());
+    }
+
+    public function testStats() {
+        $this->assertEquals(2, $this->fisk->getStats()->getBannedFriendCount());
+        $this->assertEquals(0, $this->fisk->getStats()->getUnconfirmedReportsCount());
+        $this->assertEquals(1, $this->frankie->getStats()->getUnconfirmedReportsCount());
     }
 }

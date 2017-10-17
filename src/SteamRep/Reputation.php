@@ -26,7 +26,7 @@ class Reputation extends SteamRepModel {
             $tags = [$tags];
         }
 
-        return array_map(function($data) {
+        return array_map(function ($data) {
             return new Tag($data);
         }, $tags);
     }

@@ -11,6 +11,14 @@ class SteamRepResponse extends SteamRepModel {
         return new Reputation($this->body['steamrep']['reputation'] ?? []);
     }
 
+    public function getStats(): Stats {
+        return new Stats($this->body['steamrep']['stats'] ?? []);
+    }
+
+    public function getLastSyncTime(): int {
+        return (int) $this->body['steamrep']['lastsynctime'] ?? 0;
+    }
+
     /**
      * if false, status is not 'exists' and is probably 'notfound'
      * Use for sanity checks.
