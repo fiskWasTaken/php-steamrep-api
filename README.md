@@ -1,4 +1,4 @@
-# SteamRep PHP API
+# SteamRep PHP API  ![Travis](https://api.travis-ci.org/fiskie/php-steamrep-api.svg?branch=master)
 
 Provides bindings for the public SteamRep web APIs to fetch reputation for a user.
 
