@@ -25,9 +25,14 @@ class SteamRepResponseTest extends TestCase {
      */
     private $notfound;
 
+    /**
+     * @var SteamRepResponse
+     */
+    private $badUnicode;
+
     private function load($path): SteamRepResponse {
         $resource = fopen($path, 'r');
-        $data = json_decode(fread($resource, filesize($path)), true);
+        $data = sr_json_decode(fread($resource, filesize($path)), true);
         return new SteamRepResponse($data);
     }
 
@@ -36,6 +41,12 @@ class SteamRepResponseTest extends TestCase {
         $this->fisk = $this->load('./tests/fisk.json');
         $this->frankie = $this->load('./tests/frankie.json');
         $this->notfound = $this->load('./tests/notfound.json');
+        $this->badUnicode = $this->load('./tests/scammer.json');
+    }
+
+    public function testBadUnicode() {
+        // fixme: malformed characters will persist in display name, but whatever.
+        $this->assertEquals("SCAMMER", $this->badUnicode->getReputation()->getSummary());
     }
 
     public function testTags() {
@@ -80,6 +91,9 @@ class SteamRepResponseTest extends TestCase {
         $this->assertEquals(1508096994, $this->fisk->getLastSyncTime());
     }
 
+    /**
+     * Test our safeguard against bad JSON structure for users with single tags
+     */
     public function testMalformedSingleTagAccess() {
         $tags = $this->fisk->getReputation()->getTags();
         $this->assertEquals('BAZAAR', $tags[0]->getAuthority());

@@ -13,10 +13,12 @@
   "autoload": {
     "psr-4": {
       "SteamRep\\": "src/SteamRep"
-    }
+    },
+    "files": ["src/SteamRep/functions.php"]
   },
   "require": {
     "php": "^7.0",
+    "ext-json": "*",
     "guzzlehttp/guzzle": "~6.1"
   },
   "require-dev": {

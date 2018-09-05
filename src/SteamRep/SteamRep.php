@@ -52,7 +52,7 @@ class SteamRep {
         }
 
         $json = $response->getBody();
-        $body = json_decode($json, true);
+        $body = sr_json_decode($json, true);
 
         if (!$body) {
             $exc = new SteamRepException("Empty JSON body, perhaps malformed?");
