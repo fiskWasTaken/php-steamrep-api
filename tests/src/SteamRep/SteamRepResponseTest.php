@@ -36,7 +36,7 @@ class SteamRepResponseTest extends TestCase {
         return new SteamRepResponse($data);
     }
 
-    public function setUp() {
+    public function setUp(): void {
         $this->mattie = $this->load('./tests/mattie.json');
         $this->fisk = $this->load('./tests/fisk.json');
         $this->frankie = $this->load('./tests/frankie.json');
